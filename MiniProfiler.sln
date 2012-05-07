@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StackExchange.Profiling.Wcf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Wcf", "Sample.Wcf\Sample.Wcf.csproj", "{2DD1E352-3FFE-49F8-ADAB-65F3FECE75E6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{6C014628-D16B-4BA4-847F-D1D7F6670EA2}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = StackExchange.Profiling.vsmdi
@@ -75,5 +77,8 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{EAE04FE1-268F-46EF-ACB5-290408478EBC} = {CC40098D-04F2-4F43-B5CF-B74F74351761}
+		{5D54F88D-4C79-4EAB-B7B7-C8DE78F5DDA7} = {6C014628-D16B-4BA4-847F-D1D7F6670EA2}
+		{2DD1E352-3FFE-49F8-ADAB-65F3FECE75E6} = {6C014628-D16B-4BA4-847F-D1D7F6670EA2}
+		{50A89C9B-7335-4626-B552-272CE56DC72E} = {6C014628-D16B-4BA4-847F-D1D7F6670EA2}
 	EndGlobalSection
 EndGlobal
