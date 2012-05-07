@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Wcf", "Sample.Wcf\Sa
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{6C014628-D16B-4BA4-847F-D1D7F6670EA2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StackExchange.Profiling.NHibernate", "StackExchange.Profiling.NHibernate\StackExchange.Profiling.NHibernate.csproj", "{07B6A31A-D447-4F12-A89D-025A6EDEC2E3}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = StackExchange.Profiling.vsmdi
@@ -71,6 +73,10 @@ Global
 		{2DD1E352-3FFE-49F8-ADAB-65F3FECE75E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DD1E352-3FFE-49F8-ADAB-65F3FECE75E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DD1E352-3FFE-49F8-ADAB-65F3FECE75E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07B6A31A-D447-4F12-A89D-025A6EDEC2E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07B6A31A-D447-4F12-A89D-025A6EDEC2E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07B6A31A-D447-4F12-A89D-025A6EDEC2E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07B6A31A-D447-4F12-A89D-025A6EDEC2E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
