@@ -337,9 +337,9 @@ namespace StackExchange.Profiling
         /// <param name="showControls">when true, shows buttons to minimize and clear MiniProfiler results</param>
         /// <param name="useExistingjQuery">Whether MiniProfiler should attempt to load its own version of jQuery, or rely on a version previously loaded on the page</param>
         /// <returns>Script and link elements normally; an empty string when there is no active profiling session.</returns>
-        public static IHtmlString RenderIncludes(RenderPosition? position = null, bool? showTrivial = null, bool? showTimeWithChildren = null, int? maxTracesToShow = null, bool? showControls = null, bool? useExistingjQuery = null, bool samplingOnly = false)
+        public static IHtmlString RenderIncludes(RenderPosition? position = null, InitialState? initialState = null, bool? showTrivial = null, bool? showTimeWithChildren = null, int? maxTracesToShow = null, bool? showControls = null, bool? useExistingjQuery = null, bool samplingOnly = false)
         {
-            return UI.MiniProfilerHandler.RenderIncludes(Current, position, showTrivial, showTimeWithChildren, maxTracesToShow, showControls, useExistingjQuery);
+            return UI.MiniProfilerHandler.RenderIncludes(Current, position, initialState, showTrivial, showTimeWithChildren, maxTracesToShow, showControls, useExistingjQuery);
         }
 
         /// <summary>
@@ -443,6 +443,22 @@ namespace StackExchange.Profiling
         /// Profiler popup button is displayed on the right.
         /// </summary>
         Right = 1
+    }
+
+    /// <summary>
+    /// Dictates whether the profiler window is in normal or minimized state after page load
+    /// </summary>
+    public enum InitialState
+    {
+        /// <summary>
+        /// Normal state - window is visible
+        /// </summary>
+        Normal = 0,
+
+        /// <summary>
+        /// Minimized state - window is hidden
+        /// </summary>
+        Minimized = 1
     }
 
     /// <summary>

@@ -189,6 +189,13 @@ namespace StackExchange.Profiling
             public static RenderPosition PopupRenderPosition { get; set; }
 
             /// <summary>
+            /// Dictates whether the profiler window is in normal or minimized state after page load
+            /// For a per-page override you can use .RenderIncludes(initialState: InitialState.Normal/Minimized)
+            /// </summary>
+            [DefaultValue(InitialState.Normal)]
+            public static InitialState PopupInitialState { get; set; }
+
+            /// <summary>
             /// Determines if min-max, clear, etc are rendered; defaults to false.
             /// For a per-page override you can use .RenderIncludes(showControls: true/false)
             /// </summary>

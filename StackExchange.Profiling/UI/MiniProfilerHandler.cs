@@ -15,7 +15,7 @@ namespace StackExchange.Profiling.UI
     /// </summary>
     public class MiniProfilerHandler : IRouteHandler, IHttpHandler
     {
-        internal static HtmlString RenderIncludes(MiniProfiler profiler, RenderPosition? position = null, bool? showTrivial = null, bool? showTimeWithChildren = null, int? maxTracesToShow = null, bool? showControls = null, bool? useExistingjQuery = null)
+        internal static HtmlString RenderIncludes(MiniProfiler profiler, RenderPosition? position = null, InitialState? initialState = null, bool? showTrivial = null, bool? showTimeWithChildren = null, int? maxTracesToShow = null, bool? showControls = null, bool? useExistingjQuery = null)
         {
             const string format =
 @"<script type=""text/javascript"">    
@@ -42,6 +42,7 @@ namespace StackExchange.Profiling.UI
                             ids: {ids},
                             path: '{path}',
                             version: '{version}',
+                            initialState: '{initialState}',
                             renderPosition: '{position}',
                             showTrivial: {showTrivial},
                             showChildrenTime: {showChildren},
@@ -109,6 +110,7 @@ namespace StackExchange.Profiling.UI
                     path = VirtualPathUtility.ToAbsolute(MiniProfiler.Settings.RouteBasePath).EnsureTrailingSlash(),
                     version = MiniProfiler.Settings.Version,
                     ids = ids.ToJson(),
+                    initialState = (initialState ?? MiniProfiler.Settings.PopupInitialState).ToString().ToLower(),
                     position = (position ?? MiniProfiler.Settings.PopupRenderPosition).ToString().ToLower(),
                     showTrivial = showTrivial ?? MiniProfiler.Settings.PopupShowTrivial ? "true" : "false",
                     showChildren = showTimeWithChildren ?? MiniProfiler.Settings.PopupShowTimeWithChildren ? "true" : "false",

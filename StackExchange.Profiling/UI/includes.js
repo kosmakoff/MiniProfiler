@@ -381,6 +381,8 @@ var MiniProfiler = (function ($) {
 
             $('.profiler-controls .profiler-min-max').click(function () {
                 container.toggleClass('profiler-min');
+
+                cookies.create("miniprofiler.initialState", container.hasClass("profiler-min") ? "minimized" : "normal");
             });
 
             container.hover(function () {
@@ -402,7 +404,7 @@ var MiniProfiler = (function ($) {
                 container.toggleClass("profiler-left");
                 container.toggleClass("profiler-right");
 
-                createCookie("miniprofiler.position", container.hasClass("profiler-left") ? "left" : "right");
+                cookies.create("miniprofiler.position", container.hasClass("profiler-left") ? "left" : "right");
             });
         }
         else {
@@ -421,6 +423,10 @@ var MiniProfiler = (function ($) {
 
             //initialize the controls
             initControls(container);
+
+            if (options.initialState == 'minimized') {
+                container.addClass('profiler-min');
+            }
 
             // we'll render results json via a jquery.tmpl - after we get the templates, we'll fetch the initial json to populate it
             fetchTemplates(function () {
@@ -496,13 +502,18 @@ var MiniProfiler = (function ($) {
 
             options = opt || {};
 
-            var position = readCookie("miniprofiler.position");
+            var position = cookies.read("miniprofiler.position");
+            var initialState = cookies.read("miniprofiler.initialState");
 
             if (position) {
-                options = $.extend(options, { renderPosition: position });
+                options = $.extend(options, {
+                    renderPosition: position,
+                    initialState: initialState
+                });
             }
 
-            createCookie("miniprofiler.position", options.renderPosition);
+            cookies.create("miniprofiler.position", options.renderPosition);
+            cookies.create("miniprofiler.initialState", options.initialState);
 
             var doInit = function () {
                 // when rendering a shared, full page, this div will exist
@@ -821,27 +832,29 @@ null],["lit",/^[+-]?(?:0x[\da-f]+|(?:(?:\.\d+|\d+(?:\.\d*)?)(?:e[+\-]?\d+)?))/i]
 ;
 
 // cookies
-function createCookie(name, value, days) {
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        var expires = "; expires=" + date.toGMTString();
-    }
-    else var expires = "";
-    document.cookie = name + "=" + value + expires + "; path=/";
-}
 
-function readCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-    }
-    return null;
-}
+var cookies = {
+    create: function(name, value, days) {
+        var expires;
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toGMTString();
+        } else expires = "";
+        document.cookie = name + "=" + value + expires + "; path=/";
+    },
+    read: function(name) {
+        var nameEq = name + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEq) == 0) return c.substring(nameEq.length, c.length);
+        }
+        return null;
+    },
 
-function eraseCookie(name) {
-    createCookie(name, "", -1);
-}
+    erase: function(name) {
+        create(name, "", -1);
+    }
+};
