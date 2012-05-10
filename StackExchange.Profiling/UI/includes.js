@@ -18,7 +18,7 @@ var MiniProfiler = (function ($) {
 
     var getVersionedKey = function (keyPrefix) {
         return keyPrefix + '-' + options.version;
-    }
+    };
 
     var save = function (keyPrefix, value) {
         if (!hasLocalStorage()) { return; }
@@ -61,7 +61,7 @@ var MiniProfiler = (function ($) {
 
     var getClientPerformance = function () {
         return window.performance == null ? null : window.performance;
-    }
+    };
 
     var waitedForEnd = 0;
     var fetchResults = function (ids) {
@@ -90,7 +90,7 @@ var MiniProfiler = (function ($) {
                     var copy = { navigation: {}, timing: {} };
 
                     var timing = $.extend({}, clientPerformance.timing);
-                    
+
                     for (p in timing) {
                         if (timing.hasOwnProperty(p) && !$.isFunction(timing[p])) {
                             copy.timing[p] = timing[p];
@@ -217,9 +217,13 @@ var MiniProfiler = (function ($) {
             windowHeight = $(window).height(),
             maxHeight = windowHeight - top - 40; // make sure the popup doesn't extend below the fold
 
+        // get current position based on style
+        var position = container.hasClass("profiler-right") ? "right" : "left";
+
         popup
             .css({ 'top': top, 'max-height': maxHeight })
-            .css(options.renderPosition, button.outerWidth() - 3); // move left or right, based on config
+            .css({ 'left': '', 'right': '' })
+            .css(position, button.outerWidth() - 3); // move left or right, based on config
     };
 
     var popupPreventHorizontalScroll = function (popup) {
@@ -228,7 +232,7 @@ var MiniProfiler = (function ($) {
         popup.children().each(function () { childrenHeight += $(this).height(); });
 
         popup.css({ 'padding-right': childrenHeight > popup.height() ? 40 : 10 });
-    }
+    };
 
     var popupHide = function (button, popup) {
         button.removeClass('profiler-button-active');
@@ -373,7 +377,7 @@ var MiniProfiler = (function ($) {
 
     var initControls = function (container) {
         if (options.showControls) {
-            controls = $('<div class="profiler-controls"><span class="profiler-min-max">m</span><span class="profiler-clear">c</span></div>').appendTo(container);
+            controls = $('<div class="profiler-controls"><span class="profiler-min-max">m</span><span class="profiler-clear">c</span><span class="profiler-move-aside">&lt;-&gt;</span></div>').appendTo(container);
 
             $('.profiler-controls .profiler-min-max').click(function () {
                 container.toggleClass('profiler-min');
@@ -392,6 +396,13 @@ var MiniProfiler = (function ($) {
 
             $('.profiler-controls .profiler-clear').click(function () {
                 container.find('.profiler-result').remove();
+            });
+
+            $('.profiler-controls .profiler-move-aside').click(function () {
+                container.toggleClass("profiler-left");
+                container.toggleClass("profiler-right");
+
+                createCookie("miniprofiler.position", container.hasClass("profiler-left") ? "left" : "right");
             });
         }
         else {
@@ -470,7 +481,7 @@ var MiniProfiler = (function ($) {
                         var ids = typeof JSON != 'undefined' ? JSON.parse(stringIds) : eval(stringIds);
                         fetchResults(ids);
                     }
-                }
+                };
 
             })();
         }
@@ -485,13 +496,21 @@ var MiniProfiler = (function ($) {
 
             options = opt || {};
 
+            var position = readCookie("miniprofiler.position");
+
+            if (position) {
+                options = $.extend(options, { renderPosition: position });
+            }
+
+            createCookie("miniprofiler.position", options.renderPosition);
+
             var doInit = function () {
                 // when rendering a shared, full page, this div will exist
                 container = $('.profiler-result-full');
 
                 if (container.length) {
                     if (window.location.href.indexOf("&trivial=1") > 0) {
-                        options.showTrivial = true
+                        options.showTrivial = true;
                     }
                     initFullView();
                 }
@@ -576,7 +595,7 @@ var MiniProfiler = (function ($) {
         getClientTimings: function (clientTimings) {
             var list = [];
             var t;
-            
+
             if (!clientTimings.Timings) return [];
 
             for (var i = 0; i < clientTimings.Timings.length; i++) {
@@ -643,7 +662,7 @@ var MiniProfiler = (function ($) {
                 }
 
                 return newList;
-            }
+            };
 
             var processTimes = function (elem, parent) {
                 var duration = { start: elem.StartMilliseconds, finish: (elem.StartMilliseconds + elem.DurationMilliseconds) };
@@ -679,7 +698,7 @@ var MiniProfiler = (function ($) {
                     overlap += Math.min(gap.finish, current.finish) - Math.max(gap.start, current.start);
                 }
                 return overlap;
-            }
+            };
 
             var determineGap = function (gap, node, match) {
                 var overlap = determineOverlap(gap, node);
@@ -800,3 +819,29 @@ PR.registerLangHandler(PR.createSimpleLexer([["pln",/^[\t\n\r \xA0]+/,null,"\t\n
 null],["lit",/^[+-]?(?:0x[\da-f]+|(?:(?:\.\d+|\d+(?:\.\d*)?)(?:e[+\-]?\d+)?))/i],["pln",/^[a-z_][\w-]*/i],["pun",/^[^\w\t\n\r \xA0\"\'][^\w\t\n\r \xA0+\-\"\']*/]]),["sql"])
 
 ;
+
+// cookies
+function createCookie(name, value, days) {
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        var expires = "; expires=" + date.toGMTString();
+    }
+    else var expires = "";
+    document.cookie = name + "=" + value + expires + "; path=/";
+}
+
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+function eraseCookie(name) {
+    createCookie(name, "", -1);
+}
