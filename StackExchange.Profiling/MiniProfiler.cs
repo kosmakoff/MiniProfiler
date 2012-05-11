@@ -140,15 +140,7 @@ namespace StackExchange.Profiling
         /// </summary>
         public bool HasTrivialTimings
         {
-            get
-            {
-                foreach (var t in GetTimingHierarchy())
-                {
-                    if (t.IsTrivial)
-                        return true;
-                }
-                return false;
-            }
+            get { return GetTimingHierarchy().Any(t => t.IsTrivial); }
         }
 
         /// <summary>
@@ -156,15 +148,7 @@ namespace StackExchange.Profiling
         /// </summary>
         public bool HasAllTrivialTimings
         {
-            get
-            {
-                foreach (var t in GetTimingHierarchy())
-                {
-                    if (!t.IsTrivial)
-                        return false;
-                }
-                return true;
-            }
+            get { return GetTimingHierarchy().All(t => t.IsTrivial); }
         }
 
         /// <summary>
@@ -324,7 +308,7 @@ namespace StackExchange.Profiling
         /// <param name="level">This step's visibility level; allows filtering when <see cref="MiniProfiler.Start"/> is called.</param>
         public static IDisposable StepStatic(string name, ProfileLevel level = ProfileLevel.Info)
         {
-            return MiniProfilerExtensions.Step(Current, name, level);
+            return Current.Step(name, level);
         }
 
         /// <summary>
@@ -523,7 +507,7 @@ namespace StackExchange.Profiling
             var text = new StringBuilder()
                 .Append(HttpUtility.HtmlEncode(Environment.MachineName)).Append(" at ").Append(DateTime.UtcNow).AppendLine();
 
-            Stack<Timing> timings = new Stack<Timing>();
+            var timings = new Stack<Timing>();
             timings.Push(profiler.Root);
             while (timings.Count > 0)
             {
