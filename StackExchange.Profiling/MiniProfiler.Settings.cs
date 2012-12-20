@@ -295,6 +295,8 @@ namespace StackExchange.Profiling
                 {
                     Storage = new Storage.HttpRuntimeCacheStorage(TimeSpan.FromDays(1));
                 }
+
+                Storage.Init();
             }
 
             internal static void EnsureProfilerProvider()

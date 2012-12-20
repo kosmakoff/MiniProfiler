@@ -180,6 +180,10 @@ namespace StackExchange.Profiling.Storage
             return result;
         }
 
+        public void Init()
+        {
+        }
+
         public IEnumerable<Guid> List(int maxResults, DateTime? start = null, DateTime? finish = null, ListResultsOrder orderBy = ListResultsOrder.Decending)
         {
             List<Guid> guids = new List<Guid>(); 

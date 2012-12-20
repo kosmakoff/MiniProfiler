@@ -28,6 +28,11 @@ namespace StackExchange.Profiling.Storage
     {
 
         /// <summary>
+        /// 
+        /// </summary>
+        void Init();
+
+        /// <summary>
         /// Returns a list of profile guids (optionally in a particular date range)
         /// </summary>
         /// <param name="maxResults"></param>

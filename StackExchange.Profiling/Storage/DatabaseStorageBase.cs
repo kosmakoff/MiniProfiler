@@ -52,6 +52,7 @@ namespace StackExchange.Profiling.Storage
         /// <param name="user">User identified by the current <see cref="MiniProfiler.Settings.UserProvider"/>.</param>
         public abstract List<Guid> GetUnviewedIds(string user);
 
+        public abstract void Init();
 
         /// <summary>
         /// Implement a basic list search here

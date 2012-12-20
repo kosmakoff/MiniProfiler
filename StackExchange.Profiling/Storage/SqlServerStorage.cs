@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Data.SqlClient;
@@ -402,6 +403,18 @@ order  by Started";
             }
         }
 
+        public override void Init()
+        {
+            using (var conn = GetOpenConnection())
+            {
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = TableCreationScript;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
         public override IEnumerable<Guid> List(int maxResults, DateTime? start = null, DateTime? finish = null, ListResultsOrder orderBy = ListResultsOrder.Decending)
         {
@@ -442,7 +455,8 @@ order  by Started";
         /// TODO: add indexes
         /// </remarks>
         public const string TableCreationScript =
-@"create table MiniProfilers
+@"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'MiniProfilers')
+create table MiniProfilers
   (
      Id                                   uniqueidentifier not null primary key,
      Name                                 nvarchar(200) not null,
@@ -461,6 +475,7 @@ order  by Started";
      HasUserViewed                        bit not null
   );
 
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'MiniProfilerTimings')
 create table MiniProfilerTimings
   (
      RowId                               integer primary key identity, -- sqlite: replace identity with autoincrement
@@ -483,6 +498,7 @@ create table MiniProfilerTimings
      ExecutedNonQueries                  smallint not null
   );
 
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'MiniProfilerSqlTimings')
 create table MiniProfilerSqlTimings
   (
      RowId                          integer primary key identity, -- sqlite: replace identity with autoincrement
@@ -498,6 +514,7 @@ create table MiniProfilerSqlTimings
      CommandString                  nvarchar(max) not null -- sqlite: remove (max) -- sql server ce: replace with ntext
   );
 
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'MiniProfilerSqlTimingParameters')
 create table MiniProfilerSqlTimingParameters
   (
      MiniProfilerId    uniqueidentifier not null,
@@ -508,6 +525,7 @@ create table MiniProfilerSqlTimingParameters
      Value             nvarchar(max) null -- sqlite: remove (max) -- sql server ce: replace with ntext
   );
 
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'MiniProfilerClientTimings')
 create table MiniProfilerClientTimings
 (
   MiniProfilerId    uniqueidentifier not null,
@@ -515,7 +533,6 @@ create table MiniProfilerClientTimings
   Start decimal(7,1),
   Duration decimal(7,1)    
 )
-
 ";
 
     }
