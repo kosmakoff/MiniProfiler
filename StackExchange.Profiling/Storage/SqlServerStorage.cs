@@ -405,14 +405,18 @@ order  by Started";
 
         public override void Init()
         {
-            using (var conn = GetOpenConnection())
+            if (!IsInitializaed)
             {
-                using (var cmd = conn.CreateCommand())
+                using (var conn = GetOpenConnection())
                 {
-                    cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = TableCreationScript;
-                    cmd.ExecuteNonQuery();
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = TableCreationScript;
+                        cmd.ExecuteNonQuery();
+                    }
                 }
+                IsInitializaed = true;
             }
         }
 

@@ -79,8 +79,9 @@ namespace StackExchange.Profiling.Wcf.Storage
 
         public void Init()
         {
-            throw new NotImplementedException();
         }
+
+        public bool IsInitializaed { get { return true; } }
 
         public IEnumerable<Guid> List(int maxResults, DateTime? start = null, DateTime? finish = null, ListResultsOrder orderBy = ListResultsOrder.Decending)
         {

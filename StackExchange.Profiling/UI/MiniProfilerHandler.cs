@@ -7,6 +7,7 @@ using System.Linq;
 
 using StackExchange.Profiling.Helpers;
 using System.Text;
+using StackExchange.Profiling.Storage;
 
 namespace StackExchange.Profiling.UI
 {
@@ -361,6 +362,17 @@ namespace StackExchange.Profiling.UI
             {
                 context.Response.ContentType = "application/json";
                 return "hidden".ToJson();
+            }
+
+            // Share results if it's a composite storage
+            // it only happens when GET request is made to results URL
+            if (HttpContext.Current.Request.HttpMethod == "GET")
+            {
+                var compositeStorage = MiniProfiler.Settings.Storage as CompositeStorage;
+                if (compositeStorage != null)
+                {
+                    compositeStorage.Share(id);
+                }
             }
 
             return isPopup ? ResultsJson(context, profiler) : ResultsFullPage(context, profiler);

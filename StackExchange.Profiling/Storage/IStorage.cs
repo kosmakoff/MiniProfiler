@@ -33,6 +33,11 @@ namespace StackExchange.Profiling.Storage
         void Init();
 
         /// <summary>
+        /// 
+        /// </summary>
+        bool IsInitializaed { get; }
+
+        /// <summary>
         /// Returns a list of profile guids (optionally in a particular date range)
         /// </summary>
         /// <param name="maxResults"></param>

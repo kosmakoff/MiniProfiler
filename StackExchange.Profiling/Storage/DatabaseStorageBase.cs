@@ -53,6 +53,7 @@ namespace StackExchange.Profiling.Storage
         public abstract List<Guid> GetUnviewedIds(string user);
 
         public abstract void Init();
+        public bool IsInitializaed { get; protected set; }
 
         /// <summary>
         /// Implement a basic list search here

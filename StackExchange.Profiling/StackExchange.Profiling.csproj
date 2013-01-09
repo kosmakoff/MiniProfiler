@@ -113,6 +113,7 @@
     <Compile Include="SqlTiming.cs" />
     <Compile Include="Storage\DatabaseStorageBase.cs" />
     <Compile Include="Storage\SqlServerStorage.cs" />
+    <Compile Include="Storage\CompositeStorage.cs" />
     <Compile Include="Timing.cs" />
     <Compile Include="UI\MiniProfilerHandler.cs" />
     <Compile Include="WebRequestProfilerProvider.cs" />

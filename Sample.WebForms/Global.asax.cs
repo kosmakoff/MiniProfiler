@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Security;
 using System.Web.SessionState;
 using StackExchange.Profiling;
+using StackExchange.Profiling.Storage;
 
 namespace Sample.WebForms
 {
@@ -16,7 +17,7 @@ namespace Sample.WebForms
             InitProfilerSettings();
 
             // this is only done for testing purposes so we don't check in the db to source control
-            ((SampleWeb.Helpers.SqliteMiniProfilerStorage)MiniProfiler.Settings.Storage).RecreateDatabase();
+            // ((SampleWeb.Helpers.SqliteMiniProfilerStorage)MiniProfiler.Settings.Storage).RecreateDatabase();
         }
 
         protected void Application_BeginRequest()
@@ -50,13 +51,14 @@ namespace Sample.WebForms
         private void InitProfilerSettings()
         {
             // some things should never be seen
-            var ignored = MiniProfiler.Settings.IgnoredPaths.ToList();
-            ignored.Add("WebResource.axd");
-            ignored.Add("/Styles/");
-            MiniProfiler.Settings.IgnoredPaths = ignored.ToArray();
+            MiniProfiler.Settings.IgnoredPaths = new string[0];
+            MiniProfiler.Settings.MaxJsonResponseSize = int.MaxValue;
 
-            MiniProfiler.Settings.Storage = new SampleWeb.Helpers.SqliteMiniProfilerStorage(SampleWeb.MvcApplication.ConnectionString);
-            MiniProfiler.Settings.SqlFormatter = new StackExchange.Profiling.SqlFormatters.InlineFormatter();
+            //MiniProfiler.Settings.Storage = new SampleWeb.Helpers.SqliteMiniProfilerStorage(SampleWeb.MvcApplication.ConnectionString);
+            MiniProfiler.Settings.Storage = new CompositeStorage(
+                new HttpRuntimeCacheStorage(TimeSpan.FromDays(1)),
+                new SqlServerStorage(@"Server=okosmakov1\SQLEXPRESS; Database=MiniProfilerTestDB; Trusted_Connection=True;"));
+            MiniProfiler.Settings.SqlFormatter = new StackExchange.Profiling.SqlFormatters.SqlServerFormatter();
         }
     }
 }
